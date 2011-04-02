@@ -292,9 +292,10 @@ void MumpsMatrix::add_as_block(unsigned int i, unsigned int j, MumpsMatrix* mat)
   int idx;
   for (unsigned int col=0;col<mat->get_size();col++){
     for (unsigned int n=mat->Ap[col];n<mat->Ap[col+1];n++){
-      idx=find_position(Ai + Ap[col+j], Ap[col + 1 + j] - Ap[col],mat->Ai[n]+i);
+      idx=find_position(Ai + Ap[col+j], Ap[col + 1 + j] - Ap[col+j],mat->Ai[n]+i);
       if (idx<0)
         error("Sparse matrix entry not found");
+      idx += Ap[col+j];
 #ifndef HERMES_COMMON_COMPLEX
       Ax[idx]+=mat->Ax[n];
 #else      
@@ -307,6 +308,7 @@ void MumpsMatrix::add_as_block(unsigned int i, unsigned int j, MumpsMatrix* mat)
 
   // Applies the matrix to vector_in and saves result to vector_out.
 void MumpsMatrix::multiply_with_vector(scalar* vector_in, scalar* vector_out){
+  _F_
   for(unsigned int i=0;i<size;i++){
     vector_out[i]=0;
   }
@@ -322,6 +324,7 @@ void MumpsMatrix::multiply_with_vector(scalar* vector_in, scalar* vector_out){
 }
   // Multiplies matrix with a scalar.
 void MumpsMatrix::multiply_with_scalar(scalar value){
+  _F_
   int n=nnz;
   scalar a;
   for(int i=0;i<n;i++){
@@ -337,6 +340,7 @@ void MumpsMatrix::multiply_with_scalar(scalar value){
 }
   // Creates matrix using size, nnz, and the three arrays.
 void MumpsMatrix::create(unsigned int size, unsigned int nnz, int* ap, int* ai, scalar* ax){
+  _F_
   this->nnz = nnz;
   this->size = size;
   this->Ap = new unsigned int[size+1]; assert(this->Ap != NULL);
@@ -363,6 +367,7 @@ void MumpsMatrix::create(unsigned int size, unsigned int nnz, int* ap, int* ai, 
 }
   // Duplicates a matrix (including allocation).
 MumpsMatrix* MumpsMatrix::duplicate(){
+  _F_
   MumpsMatrix * nmat=new MumpsMatrix();
 
   nmat->nnz = nnz;
